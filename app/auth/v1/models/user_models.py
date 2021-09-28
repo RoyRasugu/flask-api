@@ -1,5 +1,4 @@
 from .db_model import Quora_Db
-
 class UserModels():
     """
     Class for the user operations
@@ -32,3 +31,5 @@ class UserModels():
         if not user_response:
             return False
         return user_response
+
+
