@@ -1,4 +1,6 @@
+from .import db
 from .db_model import Quora_Db
+from datetime import datetime
 class UserModels():
     """
     Class for the user operations
@@ -32,4 +34,35 @@ class UserModels():
             return False
         return user_response
 
+class Comment(db.Model):
+
+    __tablename__ = 'users'
+
+    id = db.Column(db.Integer, primary_key = True)
+    comment = db.Column(db.String)
+    posted = db.Column(db.DateTime, default=datetime.utcnow)
+    code_problems_id = db.Column(db.Integer, db.ForeignKey('problem.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+        db.session.remove(self)
+        db.session.commit()
+
+    def get_comment(id):
+        comment = Comment.query.all(id.id)
+        return comment
+
+    @classmethod
+    def get_comments(cls,id):
+        comments = Comment.query.filter_by(code_problems_id=id).all()
+        return comments
+
+    def __repr__(self):
+        return f"Comment : id: {self.id} comment: {self.comment}"
+
+    
 

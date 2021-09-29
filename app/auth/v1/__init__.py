@@ -8,4 +8,4 @@ api = Api(version_1_auth)
 
 api.add_resource(UserRegister, '/signup')
 
-# http://localhost:5000/auth/v1/signup
+# http://127.0.0.1:5000/auth/v1/signup
