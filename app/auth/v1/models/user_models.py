@@ -69,7 +69,7 @@ class Upvote(db.Model):
 
     id = db.Column(db.Integer, primary_key = True)
     upvote = db.Column(db.Integer, default = 1)
-    code_problem_id = db.Column(db.Integer, db.ForeignKey('pitches.id'))
+    code_problem_id = db.Column(db.Integer, db.ForeignKey('code_problem.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     def save_upvotes(self):
@@ -88,5 +88,26 @@ class Upvote(db.Model):
     def __repr__(self):
         return f'{self.user_id}:{self.code_problem_id}'
 
-    
+class Downvote(db.Model):
+    __tablename__ = 'downvotes'
 
+    id = db.Column(db.Integer, primary_key = True)
+    downvote = db.Column(db.Integer, default = 1)
+    code_problem_id = db.Column(db.Integer, db.ForeignKey('code_problem.id'))
+    user_id = db.Column(db.Integer,db.ForeignKey('users.id'))
+
+    def save_downvotes(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def add_downvotes(cls,id):
+        downvote_code_problem = Downvote(user = current_user, code_problem_id = id)
+        downvote_code_problem.save_downvotes()
+
+    @classmethod
+    def get_downvotes(cls,id):
+        downvote = Downvote.query.order_by('id').all()
+        return downvote
+
+    def __repr__(self):
+        return f'{self.user_id}:{self.code_problem_id}'
