@@ -64,5 +64,29 @@ class Comment(db.Model):
     def __repr__(self):
         return f"Comment : id: {self.id} comment: {self.comment}"
 
+class Upvote(db.Model):
+    __tablename__ = 'upvotes'
+
+    id = db.Column(db.Integer, primary_key = True)
+    upvote = db.Column(db.Integer, default = 1)
+    code_problem_id = db.Column(db.Integer, db.ForeignKey('pitches.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+    def save_upvotes(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def add_upvotes(cls,id):
+        upvote_code_problem = Upvote(user = current_user, code_problem_id=id)
+        upvote_code_problem.save_upvotes()
+
+    @classmethod
+    def get_all_upvotes(cls, code_problem_id):
+        upvotes = Upvote.query.order_by('id').all()
+        return upvotes
+
+    def __repr__(self):
+        return f'{self.user_id}:{self.code_problem_id}'
+
     
 
