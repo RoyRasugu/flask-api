@@ -1,6 +1,9 @@
 from .import db
 from .db_model import Quora_Db
 from datetime import datetime
+from flask_login import UserMixin, current_user
+from sqlalchemy.sql.functions import user
+from .import login_manager
 class UserModels():
     """
     Class for the user operations
