@@ -1,5 +1,6 @@
 import os
 
+
 class Development:
     DEBUG = True
     TESTING = False

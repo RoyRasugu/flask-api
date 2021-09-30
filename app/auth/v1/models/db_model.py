@@ -1,9 +1,10 @@
 import os
+import time
 import psycopg2
 from psycopg2 import Error
 from psycopg2.extras import RealDictCursor
 
-class Quora_Db:
+class myapi:
     """
     Create the connection to a database & create table
     """
@@ -16,7 +17,7 @@ class Quora_Db:
         cls.conn =  psycopg2.connect(
             host = db_host,
             password = db_password,
-            database = db_name,
+            database=db_name,
             user=db_user
         )
         cls.cur = cls.conn.cursor(cursor_factory=RealDictCursor)
@@ -34,9 +35,25 @@ class Quora_Db:
                 username VARCHAR NOT NULL,
                 email VARCHAR UNIQUE NOT NULL,
                 password VARCHAR NOT NULL,
-                confirm_password VARCHAR NOT NULL
+                confirm_password VARCHAR NOT NULL,
+                CONSTRAINT fk_code_problem
+                FOREIGN KEY (codeId)
+                REFERENCES code_problems(codeId)
             )
             """)
+            cls.cur.execute("""
+            CREATE TABLE IF NOT EXISTS code_problems(
+                codeId serial PRIMARY kEY,
+                title VARCHAR NOT NULL,
+                language VARCHAR NOT NULL,               
+                content VARCHAR NOT NULL,
+                CONSTRAINT fk_user
+                FOREIGN KEY (userId)
+                REFERENCES users(userId)
+                
+            )
+            """)
+
             cls.conn.commit()
             print('Tables successfully created')
         except Exception as e:
@@ -71,3 +88,8 @@ class Quora_Db:
         """
         cls.cur.execute(query_string)
         return cls.cur.fetchall()
+
+    @classmethod
+    def remove_row(cls, query_string):
+        cls.cur.execute(query_string)
+        return cls.cur.remove_row()
