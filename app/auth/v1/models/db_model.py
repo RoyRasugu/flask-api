@@ -17,7 +17,7 @@ class Quora_Db:
             host = db_host,
             password = db_password,
             database = db_name,
-            user=db_user
+            user = db_user
         )
         cls.cur = cls.conn.cursor(cursor_factory=RealDictCursor)
         print("Database = ", cls.conn.get_dsn_parameters())
@@ -33,9 +33,22 @@ class Quora_Db:
                 userId serial PRIMARY kEY,
                 username VARCHAR NOT NULL,
                 email VARCHAR UNIQUE NOT NULL,
-                password VARCHAR NOT NULL,
+                userpassword VARCHAR NOT NULL,
                 confirm_password VARCHAR NOT NULL
-            )
+            );
+            CREATE TABLE IF NOT EXISTS code_problems(
+                codeId serial PRIMARY kEY,
+                title VARCHAR NOT NULL,
+                language VARCHAR NOT NULL,
+                content VARCHAR NOT NULL
+            );
+            CREATE TABLE IF NOT EXISTS comments(
+                comments_Id serial PRIMARY kEY,
+                body VARCHAR NOT NULL,
+                CONSTRAINT fk_code_problem
+                FOREIGN KEY(codeId)
+                REFERENCES code_problems(codeId)
+            );
             """)
             cls.conn.commit()
             print('Tables successfully created')
